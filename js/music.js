@@ -1,13 +1,13 @@
 // =====================================================
 // NOSSO LUGAR — MÚSICA
+// Spotify + YouTube
 // =====================================================
 
 let currentPlaylistId = null;
-let audioPlayer = null;
 
 
 // =====================================================
-// PLAYLISTS
+// PLAYLISTS — BD
 // =====================================================
 
 async function getPlaylists() {
@@ -41,7 +41,7 @@ async function addPlaylist(name) {
 
 
 // =====================================================
-// MÚSICAS
+// MÚSICAS — BD
 // =====================================================
 
 async function getPlaylistSongs(playlistId) {
@@ -49,7 +49,9 @@ async function getPlaylistSongs(playlistId) {
     .from("playlist_songs")
     .select("*")
     .eq("playlist_id", playlistId)
-    .order("created_at", { ascending: true });
+    .order("created_at", {
+      ascending: true
+    });
 
   if (error) throw error;
 
@@ -83,258 +85,51 @@ async function addPlaylistSong({
 }
 
 
-// =====================================================
-// MOSTRAR PLAYLISTS
-// =====================================================
+async function deletePlaylistSong(id) {
+  const { error } = await db
+    .from("playlist_songs")
+    .delete()
+    .eq("id", id);
 
-async function loadPlaylists() {
-  const grid = document.getElementById("playlistGrid");
-
-  if (!grid) return;
-
-  try {
-    const playlists = await getPlaylists();
-
-    grid.innerHTML = "";
-
-    if (playlists.length === 0) {
-      grid.innerHTML = `
-        <div class="empty-state">
-          Ainda não há playlists. ♡
-        </div>
-      `;
-      return;
-    }
-
-    for (const playlist of playlists) {
-      const songs = await getPlaylistSongs(playlist.id);
-
-      const card = document.createElement("div");
-      card.className = "playlist";
-
-      const title = document.createElement("b");
-      title.textContent = playlist.name;
-
-      const count = document.createElement("span");
-      count.textContent =
-        `${songs.length} ${songs.length === 1 ? "faixa" : "faixas"}`;
-
-      card.appendChild(title);
-      card.appendChild(count);
-
-      card.addEventListener("click", async () => {
-        currentPlaylistId = playlist.id;
-        await loadPlaylistSongs(playlist.id);
-      });
-
-      grid.appendChild(card);
-    }
-
-  } catch (error) {
-    console.error("Erro ao carregar playlists:", error);
-  }
+  if (error) throw error;
 }
 
 
 // =====================================================
-// MOSTRAR MÚSICAS DA PLAYLIST
+// DETETAR SERVIÇO DO LINK
 // =====================================================
 
-async function loadPlaylistSongs(playlistId) {
-  const panel = document.getElementById("songsPanel");
-  const list = document.getElementById("songsList");
+function getMusicService(url) {
 
-  if (!panel || !list) return;
-
-  currentPlaylistId = playlistId;
-
-  try {
-    const playlists = await getPlaylists();
-
-    const playlist = playlists.find(
-      item => item.id === playlistId
-    );
-
-    const name = document.getElementById(
-      "selectedPlaylistName"
-    );
-
-    if (name && playlist) {
-      name.textContent = playlist.name;
-    }
-
-    const songs = await getPlaylistSongs(playlistId);
-
-    panel.classList.remove("hidden");
-
-    list.innerHTML = "";
-
-    if (songs.length === 0) {
-      list.innerHTML = `
-        <div class="empty-state">
-          Esta playlist ainda está vazia. ♡
-        </div>
-      `;
-      return;
-    }
-
-    songs.forEach(song => {
-      const item = document.createElement("div");
-      item.className = "song-item";
-
-      const info = document.createElement("div");
-
-      const title = document.createElement("b");
-      title.textContent = song.title;
-
-      const artist = document.createElement("small");
-      artist.textContent =
-        song.artist || "Artista desconhecido";
-
-      info.appendChild(title);
-      info.appendChild(artist);
-
-      const play = document.createElement("button");
-      play.className = "primary";
-      play.textContent = "▶";
-
-      play.addEventListener("click", () => {
-        playSong(song);
-      });
-
-      item.appendChild(info);
-      item.appendChild(play);
-
-      list.appendChild(item);
-    });
-
-  } catch (error) {
-    console.error(
-      "Erro ao carregar músicas:",
-      error
-    );
-  }
-}
-
-
-// =====================================================
-// ADICIONAR PLAYLIST
-// =====================================================
-
-function setupAddPlaylist() {
-  const button =
-    document.getElementById("addPlaylist");
-
-  if (!button) {
-    console.error(
-      "Botão addPlaylist não encontrado."
-    );
-    return;
+  if (!url) {
+    return "link";
   }
 
-  button.addEventListener("click", async () => {
-    const name = prompt("Nome da playlist:");
+  const value = url.toLowerCase();
 
-    if (!name || !name.trim()) return;
+  if (
+    value.includes("youtube.com") ||
+    value.includes("youtu.be")
+  ) {
+    return "youtube";
+  }
 
-    try {
-      await addPlaylist(name);
+  if (
+    value.includes("spotify.com") ||
+    value.includes("spotify.link")
+  ) {
+    return "spotify";
+  }
 
-      await loadPlaylists();
-
-      notify("Playlist criada ♫");
-
-    } catch (error) {
-      console.error(
-        "ERRO AO CRIAR PLAYLIST:",
-        error
-      );
-
-      alert(
-        "ERRO DO SUPABASE:\n\n" +
-        (error.message || error) +
-        "\n\nCódigo: " +
-        (error.code || "sem código")
-      );
-    }
-  });
+  return "link";
 }
 
 
 // =====================================================
-// ADICIONAR MÚSICA
+// ABRIR MÚSICA
 // =====================================================
 
-function setupAddSong() {
-  const button =
-    document.getElementById("addSong");
-
-  if (!button) return;
-
-  button.addEventListener("click", async () => {
-
-    if (!currentPlaylistId) {
-      notify(
-        "Escolhe primeiro uma playlist."
-      );
-      return;
-    }
-
-    const title =
-      prompt("Nome da música:");
-
-    if (!title || !title.trim()) return;
-
-    const artist =
-      prompt("Artista:") || "";
-
-    const url =
-      prompt(
-        "Link direto do áudio (.mp3, .wav, etc.):"
-      ) || "";
-
-    try {
-
-      await addPlaylistSong({
-        playlistId: currentPlaylistId,
-        title: title.trim(),
-        artist: artist.trim(),
-        url: url.trim()
-      });
-
-      await loadPlaylistSongs(
-        currentPlaylistId
-      );
-
-      await loadPlaylists();
-
-      notify(
-        "Música adicionada ♫"
-      );
-
-    } catch (error) {
-
-      console.error(
-        "ERRO AO ADICIONAR MÚSICA:",
-        error
-      );
-
-      alert(
-        "ERRO DO SUPABASE:\n\n" +
-        (error.message || error) +
-        "\n\nCódigo: " +
-        (error.code || "sem código")
-      );
-    }
-  });
-}
-
-
-// =====================================================
-// REPRODUZIR MÚSICA
-// =====================================================
-
-async function playSong(song) {
+function playSong(song) {
 
   const title =
     document.getElementById(
@@ -344,11 +139,6 @@ async function playSong(song) {
   const artist =
     document.getElementById(
       "nowPlayingArtist"
-    );
-
-  const button =
-    document.getElementById(
-      "playBtn"
     );
 
   if (title) {
@@ -362,112 +152,652 @@ async function playSong(song) {
       "Artista desconhecido";
   }
 
-  if (!song.url || !song.url.trim()) {
+
+  const url =
+    (song.url || "").trim();
+
+
+  if (!url) {
+
     notify(
-      "Esta música não tem um link de áudio."
+      "Esta música não tem um link."
     );
+
     return;
   }
 
-  try {
 
-    if (!audioPlayer) {
-      audioPlayer = new Audio();
-    }
+  const service =
+    getMusicService(url);
 
-    audioPlayer.pause();
 
-    audioPlayer.src =
-      song.url.trim();
+  // ---------------------------------------------------
+  // YOUTUBE
+  // ---------------------------------------------------
 
-    audioPlayer.currentTime = 0;
+  if (service === "youtube") {
 
-    await audioPlayer.play();
-
-    if (button) {
-      button.textContent = "Ⅱ";
-    }
+    window.open(
+      url,
+      "_blank",
+      "noopener,noreferrer"
+    );
 
     notify(
-      `A tocar: ${song.title} ♫`
+      `A abrir no YouTube: ${song.title} ♫`
     );
+
+    return;
+  }
+
+
+  // ---------------------------------------------------
+  // SPOTIFY
+  // ---------------------------------------------------
+
+  if (service === "spotify") {
+
+    window.open(
+      url,
+      "_blank",
+      "noopener,noreferrer"
+    );
+
+    notify(
+      `A abrir no Spotify: ${song.title} ♫`
+    );
+
+    return;
+  }
+
+
+  // ---------------------------------------------------
+  // OUTRO LINK
+  // ---------------------------------------------------
+
+  window.open(
+    url,
+    "_blank",
+    "noopener,noreferrer"
+  );
+
+  notify(
+    `A abrir: ${song.title} ♫`
+  );
+}
+
+
+// =====================================================
+// MOSTRAR PLAYLISTS
+// =====================================================
+
+async function loadPlaylists() {
+
+  const grid =
+    document.getElementById(
+      "playlistGrid"
+    );
+
+  if (!grid) return;
+
+
+  try {
+
+    const playlists =
+      await getPlaylists();
+
+
+    grid.innerHTML = "";
+
+
+    if (playlists.length === 0) {
+
+      grid.innerHTML = `
+        <div class="empty-state">
+          Ainda não há playlists. ♡
+        </div>
+      `;
+
+      return;
+    }
+
+
+    for (const playlist of playlists) {
+
+      const songs =
+        await getPlaylistSongs(
+          playlist.id
+        );
+
+
+      const card =
+        document.createElement(
+          "div"
+        );
+
+      card.className =
+        "playlist";
+
+
+      const title =
+        document.createElement(
+          "b"
+        );
+
+      title.textContent =
+        playlist.name;
+
+
+      const count =
+        document.createElement(
+          "span"
+        );
+
+      count.textContent =
+        `${songs.length} ${
+          songs.length === 1
+            ? "faixa"
+            : "faixas"
+        }`;
+
+
+      card.appendChild(title);
+      card.appendChild(count);
+
+
+      card.addEventListener(
+        "click",
+        async () => {
+
+          currentPlaylistId =
+            playlist.id;
+
+          await loadPlaylistSongs(
+            playlist.id
+          );
+
+        }
+      );
+
+
+      grid.appendChild(card);
+    }
 
   } catch (error) {
 
     console.error(
-      "Erro ao reproduzir música:",
+      "Erro ao carregar playlists:",
       error
     );
 
-    if (button) {
-      button.textContent = "▶";
-    }
-
-    notify(
-      "Não foi possível reproduzir este link."
-    );
   }
 }
 
 
 // =====================================================
-// BOTÃO PLAY / PAUSA
+// MOSTRAR MÚSICAS DA PLAYLIST
 // =====================================================
 
-function setupMusicPlayer() {
+async function loadPlaylistSongs(
+  playlistId
+) {
+
+  const panel =
+    document.getElementById(
+      "songsPanel"
+    );
+
+  const list =
+    document.getElementById(
+      "songsList"
+    );
+
+  if (!panel || !list) return;
+
+
+  currentPlaylistId =
+    playlistId;
+
+
+  try {
+
+    const playlists =
+      await getPlaylists();
+
+
+    const playlist =
+      playlists.find(
+        item =>
+          item.id === playlistId
+      );
+
+
+    const name =
+      document.getElementById(
+        "selectedPlaylistName"
+      );
+
+
+    if (name && playlist) {
+
+      name.textContent =
+        playlist.name;
+
+    }
+
+
+    const songs =
+      await getPlaylistSongs(
+        playlistId
+      );
+
+
+    panel.classList.remove(
+      "hidden"
+    );
+
+
+    list.innerHTML = "";
+
+
+    if (songs.length === 0) {
+
+      list.innerHTML = `
+        <div class="empty-state">
+          Esta playlist ainda está vazia. ♡
+        </div>
+      `;
+
+      return;
+    }
+
+
+    songs.forEach(song => {
+
+      const item =
+        document.createElement(
+          "div"
+        );
+
+      item.className =
+        "song-item";
+
+
+      const info =
+        document.createElement(
+          "div"
+        );
+
+
+      const title =
+        document.createElement(
+          "b"
+        );
+
+      title.textContent =
+        song.title;
+
+
+      const artist =
+        document.createElement(
+          "small"
+        );
+
+      artist.textContent =
+        song.artist ||
+        "Artista desconhecido";
+
+
+      const service =
+        document.createElement(
+          "small"
+        );
+
+      const type =
+        getMusicService(
+          song.url
+        );
+
+
+      if (type === "spotify") {
+
+        service.textContent =
+          "Spotify";
+
+      } else if (
+        type === "youtube"
+      ) {
+
+        service.textContent =
+          "YouTube";
+
+      } else {
+
+        service.textContent =
+          "Link";
+
+      }
+
+
+      service.className =
+        "music-service";
+
+
+      info.appendChild(title);
+      info.appendChild(artist);
+      info.appendChild(service);
+
+
+      const play =
+        document.createElement(
+          "button"
+        );
+
+      play.className =
+        "primary";
+
+      play.textContent =
+        "▶";
+
+
+      play.addEventListener(
+        "click",
+        () => {
+
+          playSong(song);
+
+        }
+      );
+
+
+      item.appendChild(info);
+      item.appendChild(play);
+
+
+      list.appendChild(item);
+
+    });
+
+  } catch (error) {
+
+    console.error(
+      "Erro ao carregar músicas:",
+      error
+    );
+
+  }
+}
+
+
+// =====================================================
+// NOVA PLAYLIST
+// =====================================================
+
+function setupAddPlaylist() {
 
   const button =
     document.getElementById(
-      "playBtn"
+      "addPlaylist"
     );
 
-  if (!button) return;
 
-  audioPlayer = new Audio();
+  if (!button) {
+
+    console.error(
+      "Botão addPlaylist não encontrado."
+    );
+
+    return;
+  }
+
 
   button.addEventListener(
     "click",
     async () => {
 
-      if (!audioPlayer.src) {
-        notify(
-          "Escolhe primeiro uma música."
+      const name =
+        prompt(
+          "Nome da playlist:"
         );
+
+
+      if (
+        !name ||
+        !name.trim()
+      ) {
         return;
       }
 
+
       try {
 
-        if (audioPlayer.paused) {
+        await addPlaylist(
+          name
+        );
 
-          await audioPlayer.play();
 
-          button.textContent = "Ⅱ";
+        await loadPlaylists();
 
-        } else {
 
-          audioPlayer.pause();
+        notify(
+          "Playlist criada ♫"
+        );
 
-          button.textContent = "▶";
-        }
 
       } catch (error) {
 
         console.error(
-          "Erro no player:",
+          "ERRO AO CRIAR PLAYLIST:",
           error
         );
+
+
+        alert(
+          "ERRO DO SUPABASE:\n\n" +
+          (error.message || error) +
+          "\n\nCódigo: " +
+          (error.code ||
+            "sem código")
+        );
+
       }
+
     }
   );
+}
 
 
-  audioPlayer.addEventListener(
-    "ended",
-    () => {
-      button.textContent = "▶";
+// =====================================================
+// ADICIONAR MÚSICA
+// =====================================================
+
+function setupAddSong() {
+
+  const button =
+    document.getElementById(
+      "addSong"
+    );
+
+
+  if (!button) {
+
+    console.error(
+      "Botão addSong não encontrado."
+    );
+
+    return;
+  }
+
+
+  button.addEventListener(
+    "click",
+    async () => {
+
+      if (!currentPlaylistId) {
+
+        notify(
+          "Escolhe primeiro uma playlist."
+        );
+
+        return;
+      }
+
+
+      const title =
+        prompt(
+          "Nome da música:"
+        );
+
+
+      if (
+        !title ||
+        !title.trim()
+      ) {
+        return;
+      }
+
+
+      const artist =
+        prompt(
+          "Artista:"
+        ) || "";
+
+
+      const url =
+        prompt(
+          "Link da música (Spotify ou YouTube):"
+        ) || "";
+
+
+      if (!url.trim()) {
+
+        notify(
+          "É necessário colocar o link da música."
+        );
+
+        return;
+      }
+
+
+      const service =
+        getMusicService(
+          url
+        );
+
+
+      if (
+        service !== "spotify" &&
+        service !== "youtube"
+      ) {
+
+        const continuar =
+          confirm(
+            "Este link não parece ser do Spotify ou YouTube.\n\nDesejas guardar mesmo assim?"
+          );
+
+        if (!continuar) {
+          return;
+        }
+
+      }
+
+
+      try {
+
+        await addPlaylistSong({
+
+          playlistId:
+            currentPlaylistId,
+
+          title:
+            title.trim(),
+
+          artist:
+            artist.trim(),
+
+          url:
+            url.trim()
+
+        });
+
+
+        await loadPlaylistSongs(
+          currentPlaylistId
+        );
+
+
+        await loadPlaylists();
+
+
+        notify(
+          "Música adicionada ♫"
+        );
+
+
+      } catch (error) {
+
+        console.error(
+          "ERRO AO ADICIONAR MÚSICA:",
+          error
+        );
+
+
+        alert(
+          "ERRO DO SUPABASE:\n\n" +
+          (error.message || error) +
+          "\n\nCódigo: " +
+          (error.code ||
+            "sem código")
+        );
+
+      }
+
     }
   );
+}
+
+
+// =====================================================
+// TEMPO REAL
+// =====================================================
+
+function setupMusicRealtime() {
+
+  try {
+
+    subscribeToTable(
+      "playlists",
+      () => {
+        loadPlaylists();
+      }
+    );
+
+
+    subscribeToTable(
+      "playlist_songs",
+      () => {
+
+        loadPlaylists();
+
+        if (currentPlaylistId) {
+
+          loadPlaylistSongs(
+            currentPlaylistId
+          );
+
+        }
+
+      }
+    );
+
+  } catch (error) {
+
+    console.error(
+      "Erro no tempo real da música:",
+      error
+    );
+
+  }
 }
 
 
@@ -484,15 +814,20 @@ document.addEventListener(
       const user =
         await getCurrentUser();
 
-      if (!user) return;
+
+      if (!user) {
+        return;
+      }
+
 
       setupAddPlaylist();
 
       setupAddSong();
 
-      setupMusicPlayer();
-
       await loadPlaylists();
+
+      setupMusicRealtime();
+
 
     } catch (error) {
 
@@ -500,6 +835,8 @@ document.addEventListener(
         "Erro ao iniciar Música:",
         error
       );
+
     }
+
   }
 );

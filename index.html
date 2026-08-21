@@ -150,12 +150,20 @@
       </section>
 
       <section id="memories" class="page">
-        <div class="page-title"><div><span class="eyebrow">05 · MEMÓRIAS</span><h1>O que queremos guardar</h1><p>Pequenos momentos, para não depender só da memória.</p></div><button class="primary">+ guardar memória</button></div>
-        <div class="memory-feature"><div class="memory-image">18<br><small>AGO · 2026</small></div><div><span class="eyebrow">UMA TARDE</span><h2>Uma tarde que merecia ficar.</h2><p>Sem grandes planos. Só nós duas, café, conversa e aquela sensação boa de não precisar estar em nenhum outro lugar.</p><small>♡ guardada por vocês</small></div></div>
-        <div class="memory-row"><div><span>03 AGO</span><b>domingo preguiçoso</b></div><div><span>27 JUL</span><b>o filme que quase odiamos</b></div><div><span>14 JUL</span><b>uma descoberta aleatória</b></div></div>
-      </section>
-    </main>
+  <div class="page-title">
+    <div>
+      <span class="eyebrow">05 · MEMÓRIAS</span>
+      <h1>O que queremos guardar</h1>
+      <p>Pequenos momentos, para não depender só da memória.</p>
+    </div>
+
+    <button class="primary" id="addMemory">
+      + guardar memória
+    </button>
   </div>
+
+  <div id="memoriesGrid"></div>
+</section>
   <div class="toast" id="toast"></div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 

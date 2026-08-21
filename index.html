@@ -233,39 +233,127 @@
       </section>
 
       <section id="music" class="page">
-        <div class="page-title"><div><span class="eyebrow">02 · MÚSICA</span><h1>Ouvindo agora</h1><p>Cada uma pode ouvir a sua música — mas vocês continuam juntas.</p></div></div>
-        <div class="music-stage">
-          <div class="record-art"><div class="record">◉</div></div>
-          <div class="now-playing"><span class="eyebrow">VOCÊ ESTÁ OUVINDO</span><h2>Holocene</h2><p>Bon Iver</p><div class="big-progress"><i></i></div><div class="player-controls"><button>↶</button><button class="play" id="playBtn">▶</button><button>↷</button></div></div>
-        </div>
-<div class="section-heading">
-  <div>
-    <span class="eyebrow">compartilhadas</span>
-    <h2>Nossas playlists</h2>
+
+  <div class="page-title">
+    <div>
+      <span class="eyebrow">02 · MÚSICA</span>
+      <h1>Ouvindo agora</h1>
+      <p>
+        Cada uma pode ouvir a sua música —
+        mas vocês continuam juntas.
+      </p>
+    </div>
   </div>
 
-  <button class="primary" id="addPlaylist">
-    + playlist
-  </button>
-</div>
 
-<div class="playlist-grid"></div>
+  <div class="music-stage">
 
-<div class="songs-panel hidden" id="songsPanel">
-  <div class="section-heading">
-    <div>
-      <span class="eyebrow">PLAYLIST</span>
-      <h2 id="selectedPlaylistName">Músicas</h2>
+    <div class="record-art">
+      <div class="record">◉</div>
     </div>
 
-    <button class="primary" id="addSong">
-      + adicionar música
-    </button>
+    <div class="now-playing">
+
+      <span class="eyebrow">
+        VOCÊ ESTÁ OUVINDO
+      </span>
+
+      <h2 id="nowPlayingTitle">
+        Nenhuma música
+      </h2>
+
+      <p id="nowPlayingArtist">
+        —
+      </p>
+
+      <div class="big-progress">
+        <i></i>
+      </div>
+
+      <div class="player-controls">
+        <button>↶</button>
+
+        <button
+          class="play"
+          id="playBtn"
+        >
+          ▶
+        </button>
+
+        <button>↷</button>
+      </div>
+
+    </div>
+
   </div>
 
-  <div id="songsList"></div>
-</div>        <div class="playlist-grid"><div class="playlist"><b>nossas músicas</b><span>48 faixas</span></div><div class="playlist"><b>dias ruins</b><span>16 faixas</span></div><div class="playlist"><b>2026</b><span>23 faixas</span></div></div>
-      </section>
+
+  <!-- PLAYLISTS -->
+
+  <div class="section-heading">
+
+    <div>
+      <span class="eyebrow">
+        compartilhadas
+      </span>
+
+      <h2>
+        Nossas playlists
+      </h2>
+    </div>
+
+    <button
+      class="primary"
+      id="addPlaylist"
+    >
+      + playlist
+    </button>
+
+  </div>
+
+
+  <!-- O JAVASCRIPT COLOCA AS PLAYLISTS AQUI -->
+
+  <div
+    class="playlist-grid"
+    id="playlistGrid"
+  ></div>
+
+
+  <!-- MÚSICAS DA PLAYLIST -->
+
+  <div
+    class="songs-panel hidden"
+    id="songsPanel"
+  >
+
+    <div class="section-heading">
+
+      <div>
+        <span class="eyebrow">
+          PLAYLIST
+        </span>
+
+        <h2 id="selectedPlaylistName">
+          Músicas
+        </h2>
+      </div>
+
+      <button
+        class="primary"
+        id="addSong"
+      >
+        + adicionar música
+      </button>
+
+    </div>
+
+
+    <div id="songsList"></div>
+
+  </div>
+
+</section>
 
       <section id="books" class="page">
         <div class="page-title"><div><span class="eyebrow">03 · BIBLIOTECA</span><h1>Os nossos livros</h1><p>Uma estante compartilhada, com espaço para cada história.</p></div><button class="primary" id="addBook">+ adicionar livro</button></div>

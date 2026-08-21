@@ -235,20 +235,15 @@
           </div>
         </div>
       </section>
-
-      <section id="music" class="page">
+<section id="music" class="page">
 
   <div class="page-title">
     <div>
       <span class="eyebrow">02 · MÚSICA</span>
       <h1>Ouvindo agora</h1>
-      <p>
-        Cada uma pode ouvir a sua música —
-        mas vocês continuam juntas.
-      </p>
+      <p>Cada uma pode ouvir a sua música — mas vocês continuam juntas.</p>
     </div>
   </div>
-
 
   <div class="music-stage">
 
@@ -257,36 +252,22 @@
     </div>
 
     <div class="now-playing">
+      <span class="eyebrow">VOCÊ ESTÁ OUVINDO</span>
 
-      <span class="eyebrow">
-        VOCÊ ESTÁ OUVINDO
-      </span>
-
-      <h2 id="nowPlayingTitle">
-        Nenhuma música
-      </h2>
-
-      <p id="nowPlayingArtist">
-        —
-      </p>
+      <h2 id="nowPlayingTitle">Nenhuma música</h2>
+      <p id="nowPlayingArtist">—</p>
 
       <div class="big-progress">
-        <i></i>
+        <i id="musicProgress"></i>
       </div>
 
       <div class="player-controls">
-        <button>↶</button>
+        <button id="prevSong">↶</button>
 
-        <button
-          class="play"
-          id="playBtn"
-        >
-          ▶
-        </button>
+        <button class="play" id="playBtn">▶</button>
 
-        <button>↷</button>
+        <button id="nextSong">↷</button>
       </div>
-
     </div>
 
   </div>
@@ -297,65 +278,52 @@
   <div class="section-heading">
 
     <div>
-      <span class="eyebrow">
-        compartilhadas
-      </span>
-
-      <h2>
-        Nossas playlists
-      </h2>
+      <span class="eyebrow">compartilhadas</span>
+      <h2>Nossas playlists</h2>
     </div>
 
-    <button
-      class="primary"
-      id="addPlaylist"
-    >
+    <button class="primary" id="addPlaylist">
       + playlist
     </button>
 
   </div>
 
-
-  <!-- O JAVASCRIPT COLOCA AS PLAYLISTS AQUI -->
-
   <div
     class="playlist-grid"
-    id="playlistGrid"
-  ></div>
+    id="playlistGrid">
+  </div>
 
 
   <!-- MÚSICAS DA PLAYLIST -->
 
   <div
     class="songs-panel hidden"
-    id="songsPanel"
-  >
+    id="songsPanel">
 
     <div class="section-heading">
 
       <div>
-        <span class="eyebrow">
-          PLAYLIST
-        </span>
-
-        <h2 id="selectedPlaylistName">
-          Músicas
-        </h2>
+        <span class="eyebrow">PLAYLIST</span>
+        <h2 id="selectedPlaylistName">Músicas</h2>
       </div>
 
-      <button
-        class="primary"
-        id="addSong"
-      >
+      <button class="primary" id="addSong">
         + adicionar música
       </button>
 
     </div>
 
-
     <div id="songsList"></div>
 
   </div>
+
+
+  <!-- PLAYER DE ÁUDIO -->
+
+  <audio
+    id="audioPlayer"
+    preload="metadata">
+  </audio>
 
 </section>
 

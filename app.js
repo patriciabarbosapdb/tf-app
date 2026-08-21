@@ -9,8 +9,6 @@ const form=document.getElementById('messageForm'), input=document.getElementById
 form.addEventListener('submit',e=>{e.preventDefault();const text=input.value.trim();if(!text)return;const d=document.createElement('div');d.className='message me';d.innerHTML='<small>agora</small><p></p>';d.querySelector('p').textContent=text;messages.appendChild(d);input.value='';messages.scrollTop=messages.scrollHeight;notify('Mensagem enviada ♡')});
 document.getElementById('newMessage').addEventListener('click',()=>{input.focus();notify('Escreva uma nova mensagem')});
 document.getElementById('playBtn').addEventListener('click',e=>{e.currentTarget.textContent=e.currentTarget.textContent==='▶'?'Ⅱ':'▶';notify(e.currentTarget.textContent==='Ⅱ'?'Tocando agora ♫':'Pausado')});
-document.getElementById('addNote').addEventListener('click',()=>{const title=prompt('Título da nota');if(!title)return;const body=prompt('Escreva a nota');if(body===null)return;const card=document.createElement('article');card.className='note-card';card.innerHTML='<span>AGORA</span><h3></h3><p></p><small>minha nota</small>';card.querySelector('h3').textContent=title;card.querySelector('p').textContent=body;document.getElementById('notesGrid').prepend(card);notify('Nota guardada')});
-
 
 // ---------- Supabase: login + chat em tempo real ----------
 let supabaseClient = null;

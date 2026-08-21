@@ -4,6 +4,11 @@
 
 let currentBookFilter = "all";
 
+
+// =====================================================
+// MOSTRAR LIVROS
+// =====================================================
+
 async function loadBooksIntoPage() {
   const grid = document.getElementById("bookGrid");
 
@@ -33,7 +38,8 @@ async function loadBooksIntoPage() {
       card.className = "book-card";
 
       const cover = document.createElement("div");
-      cover.className = "cover c" + ((book.title.length % 4) + 1);
+      cover.className =
+        "cover c" + ((book.title.length % 4) + 1);
 
       cover.textContent = book.title;
 
@@ -41,7 +47,8 @@ async function loadBooksIntoPage() {
       title.textContent = book.title;
 
       const author = document.createElement("small");
-      author.textContent = book.author || "Autor desconhecido";
+      author.textContent =
+        book.author || "Autor desconhecido";
 
       const rating = document.createElement("span");
 
@@ -60,7 +67,10 @@ async function loadBooksIntoPage() {
     });
 
   } catch (error) {
-    console.error("Erro ao carregar livros:", error);
+    console.error(
+      "Erro ao carregar livros:",
+      error
+    );
   }
 }
 
@@ -70,32 +80,43 @@ async function loadBooksIntoPage() {
 // =====================================================
 
 function setupBookFilters() {
-  const buttons = document.querySelectorAll(".book-tabs button");
+
+  const buttons =
+    document.querySelectorAll(
+      ".book-tabs button"
+    );
 
   buttons.forEach(button => {
+
     button.addEventListener("click", () => {
 
-      buttons.forEach(btn =>
-        btn.classList.remove("active")
-      );
+      buttons.forEach(btn => {
+        btn.classList.remove("active");
+      });
 
       button.classList.add("active");
 
-      const text = button.textContent.toLowerCase();
+      const text =
+        button.textContent.toLowerCase();
 
       if (text.includes("lidos")) {
         currentBookFilter = "read";
+
       } else if (text.includes("lendo")) {
         currentBookFilter = "reading";
+
       } else if (text.includes("quero ler")) {
         currentBookFilter = "want";
+
       } else {
         currentBookFilter = "all";
       }
 
       loadBooksIntoPage();
     });
+
   });
+
 }
 
 
@@ -105,68 +126,90 @@ function setupBookFilters() {
 
 function setupAddBook() {
 
-  const button = document.getElementById("addBook");
+  const button =
+    document.getElementById("addBook");
 
   if (!button) return;
 
-  button.addEventListener("click", async () => {
+  button.addEventListener(
+    "click",
+    async () => {
 
-    const title = prompt("Nome do livro:");
+      const title =
+        prompt("Nome do livro:");
 
-    if (!title) return;
+      if (!title) return;
 
-    const author = prompt("Autor:");
+      const author =
+        prompt("Autor:") || "";
 
-    const statusInput = prompt(
-      "Estado:\n\n" +
-      "1 — Quero ler\n" +
-      "2 — Lendo\n" +
-      "3 — Lido"
-    );
+      const statusInput =
+        prompt(
+          "Estado:\n\n" +
+          "1 — Quero ler\n" +
+          "2 — Lendo\n" +
+          "3 — Lido"
+        );
 
-    let status = "want";
+      let status = "want";
 
-    if (statusInput === "2") {
-      status = "reading";
+      if (statusInput === "2") {
+        status = "reading";
+      }
+
+      if (statusInput === "3") {
+        status = "read";
+      }
+
+      let rating = null;
+
+      if (status === "read") {
+
+        const ratingInput =
+          prompt(
+            "Avaliação de 0 a 5 estrelas:"
+          );
+
+        rating = Math.max(
+          0,
+          Math.min(
+            5,
+            Number(ratingInput) || 0
+          )
+        );
+      }
+
+      try {
+
+        await addBook({
+          title: title.trim(),
+          author: author.trim(),
+          status,
+          rating
+        });
+
+        await loadBooksIntoPage();
+
+        alert("Livro adicionado! 📚");
+
+      } catch (error) {
+
+        console.error(
+          "ERRO AO ADICIONAR LIVRO:",
+          error
+        );
+
+        alert(
+          "ERRO DO SUPABASE:\n\n" +
+          (error.message || error) +
+          "\n\nCódigo: " +
+          (error.code || "sem código")
+        );
+      }
+
     }
-
-    if (statusInput === "3") {
-      status = "read";
-    }
-
-    let rating = 0;
-
-    if (status === "read") {
-      const ratingInput = prompt(
-        "Avaliação de 0 a 5 estrelas:"
-      );
-
-      rating = Math.max(
-        0,
-        Math.min(5, Number(ratingInput) || 0)
-      );
-    }
-
-    try {
-
-      await addBook({
-        title,
-        author,
-        status,
-        rating
-      });
-
-      await loadBooksIntoPage();
-
-} catch (error) {
-  console.error("ERRO AO ADICIONAR LIVRO:", error);
-
-  alert(
-    "ERRO DO SUPABASE:\n\n" +
-    (error.message || error) +
-    "\n\nCódigo: " +
-    (error.code || "sem código")
   );
+
 }
 
 
@@ -187,18 +230,22 @@ function setupBookRealtime() {
 // INICIALIZAÇÃO
 // =====================================================
 
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener(
+  "DOMContentLoaded",
+  async () => {
 
-  setupBookFilters();
+    setupBookFilters();
 
-  setupAddBook();
+    setupAddBook();
 
-  const user = await getCurrentUser();
+    const user =
+      await getCurrentUser();
 
-  if (!user) return;
+    if (!user) return;
 
-  await loadBooksIntoPage();
+    await loadBooksIntoPage();
 
-  setupBookRealtime();
+    setupBookRealtime();
 
-});
+  }
+);

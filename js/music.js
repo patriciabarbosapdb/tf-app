@@ -242,33 +242,98 @@ async function loadPlaylists() {
 // MOSTRAR MÚSICAS DA PLAYLIST
 // =====================================================
 
-async function loadPlaylistSongs(
-  playlistId
-) {
+async function loadPlaylistSongs(playlistId) {
+
+  const panel =
+    document.getElementById("songsPanel");
+
+  const list =
+    document.getElementById("songsList");
+
+  if (!panel || !list) return;
+
+  currentPlaylistId = playlistId;
 
   try {
 
-    const songs =
-      await getPlaylistSongs(
-        playlistId
+    const playlists =
+      await getPlaylists();
+
+    const playlist =
+      playlists.find(
+        item => item.id === playlistId
       );
 
+    const name =
+      document.getElementById(
+        "selectedPlaylistName"
+      );
+
+    if (name && playlist) {
+      name.textContent = playlist.name;
+    }
+
+    const songs =
+      await getPlaylistSongs(playlistId);
+
+    panel.classList.remove("hidden");
+
+    list.innerHTML = "";
 
     if (songs.length === 0) {
 
-      notify(
-        "Esta playlist ainda está vazia."
-      );
+      list.innerHTML = `
+        <div class="empty-state">
+          Esta playlist ainda está vazia. ♡
+        </div>
+      `;
 
       return;
     }
 
+    songs.forEach(song => {
 
-    const song =
-      songs[0];
+      const item =
+        document.createElement("div");
 
+      item.className = "song-item";
 
-    playSong(song);
+      const info =
+        document.createElement("div");
+
+      const title =
+        document.createElement("b");
+
+      title.textContent =
+        song.title;
+
+      const artist =
+        document.createElement("small");
+
+      artist.textContent =
+        song.artist ||
+        "Artista desconhecido";
+
+      info.appendChild(title);
+      info.appendChild(artist);
+
+      const play =
+        document.createElement("button");
+
+      play.className = "primary";
+      play.textContent = "▶";
+
+      play.addEventListener(
+        "click",
+        () => playSong(song)
+      );
+
+      item.appendChild(info);
+      item.appendChild(play);
+
+      list.appendChild(item);
+
+    });
 
   } catch (error) {
 
@@ -278,9 +343,7 @@ async function loadPlaylistSongs(
     );
 
   }
-
 }
-
 
 // =====================================================
 // TOCAR MÚSICA
@@ -564,10 +627,11 @@ document.addEventListener(
 
     if (!user) return;
 
+setupAddPlaylist();
 
-    setupAddPlaylist();
+setupAddSong();
 
-    setupMusicPlayer();
+setupMusicPlayer();
 
     await loadPlaylists();
 

@@ -8,7 +8,6 @@ function notify(text){toast.textContent=text;toast.classList.add('show');setTime
 const form=document.getElementById('messageForm'), input=document.getElementById('messageInput'), messages=document.getElementById('messages');
 form.addEventListener('submit',e=>{e.preventDefault();const text=input.value.trim();if(!text)return;const d=document.createElement('div');d.className='message me';d.innerHTML='<small>agora</small><p></p>';d.querySelector('p').textContent=text;messages.appendChild(d);input.value='';messages.scrollTop=messages.scrollHeight;notify('Mensagem enviada ♡')});
 document.getElementById('newMessage').addEventListener('click',()=>{input.focus();notify('Escreva uma nova mensagem')});
-document.getElementById('playBtn').addEventListener('click',e=>{e.currentTarget.textContent=e.currentTarget.textContent==='▶'?'Ⅱ':'▶';notify(e.currentTarget.textContent==='Ⅱ'?'Tocando agora ♫':'Pausado')});
 
 // ---------- Supabase: login + chat em tempo real ----------
 let supabaseClient = null;

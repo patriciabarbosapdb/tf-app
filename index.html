@@ -123,8 +123,23 @@
 
       <section id="books" class="page">
         <div class="page-title"><div><span class="eyebrow">03 · BIBLIOTECA</span><h1>Os nossos livros</h1><p>Uma estante compartilhada, com espaço para cada história.</p></div><button class="primary" id="addBook">+ adicionar livro</button></div>
-        <div class="book-tabs"><button class="active">todos · 23</button><button>lidos · 12</button><button>lendo · 4</button><button>quero ler · 7</button></div>
-        <div class="book-grid" id="bookGrid">
+<div class="book-tabs">
+  <button class="active" data-book-filter="all">
+    todos · <span id="countAll">0</span>
+  </button>
+
+  <button data-book-filter="read">
+    lidos · <span id="countRead">0</span>
+  </button>
+
+  <button data-book-filter="reading">
+    lendo · <span id="countReading">0</span>
+  </button>
+
+  <button data-book-filter="want">
+    quero ler · <span id="countWant">0</span>
+  </button>
+</div>        <div class="book-grid" id="bookGrid">
         </div>
       </section>
 

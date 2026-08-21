@@ -158,15 +158,15 @@ function setupAddBook() {
 
       await loadBooksIntoPage();
 
-    } catch (error) {
+} catch (error) {
+  console.error("ERRO AO ADICIONAR LIVRO:", error);
 
-      console.error(error);
-
-      alert(
-        "Não foi possível adicionar o livro."
-      );
-    }
-  });
+  alert(
+    "ERRO DO SUPABASE:\n\n" +
+    (error.message || error) +
+    "\n\nCódigo: " +
+    (error.code || "sem código")
+  );
 }
 
 

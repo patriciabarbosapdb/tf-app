@@ -10,7 +10,6 @@ form.addEventListener('submit',e=>{e.preventDefault();const text=input.value.tri
 document.getElementById('newMessage').addEventListener('click',()=>{input.focus();notify('Escreva uma nova mensagem')});
 document.getElementById('playBtn').addEventListener('click',e=>{e.currentTarget.textContent=e.currentTarget.textContent==='▶'?'Ⅱ':'▶';notify(e.currentTarget.textContent==='Ⅱ'?'Tocando agora ♫':'Pausado')});
 document.getElementById('addNote').addEventListener('click',()=>{const title=prompt('Título da nota');if(!title)return;const body=prompt('Escreva a nota');if(body===null)return;const card=document.createElement('article');card.className='note-card';card.innerHTML='<span>AGORA</span><h3></h3><p></p><small>minha nota</small>';card.querySelector('h3').textContent=title;card.querySelector('p').textContent=body;document.getElementById('notesGrid').prepend(card);notify('Nota guardada')});
-document.getElementById('addBook').addEventListener('click',()=>{const title=prompt('Nome do livro');if(!title)return;const author=prompt('Autora/autor')||'Autor desconhecido';const card=document.createElement('article');card.className='book-card';card.innerHTML='<div class="cover c4">NOVO<br>LIVRO</div><b></b><small></small><span>☆ ☆ ☆ ☆ ☆</span>';card.querySelector('b').textContent=title;card.querySelector('small').textContent=author;document.getElementById('bookGrid').prepend(card);notify('Livro adicionado à biblioteca')});
 
 
 // ---------- Supabase: login + chat em tempo real ----------

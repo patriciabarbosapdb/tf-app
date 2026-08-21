@@ -54,45 +54,166 @@
       </header>
 
       <section id="home" class="page active-page">
-        <div class="topline"><span>SEXTA-FEIRA · 21 AGOSTO 2026</span><span class="quiet-dot">● online</span></div>
-        <div class="hero">
-          <div>
-            <p class="eyebrow">um cantinho só nosso</p>
-            <h1>Olá, meninas.<br><em>Que bom ter vocês aqui.</em></h1>
-            <p class="hero-copy">Conversas, músicas, livros, ideias e pequenas memórias — tudo guardado no mesmo lugar.</p>
-          </div>
-          <div class="quote-card">
-            <span>“</span>
-            <p>Algumas coisas ficam melhores quando compartilhadas.</p>
-            <small>— para nós duas</small>
-          </div>
-        </div>
 
-        <div class="section-heading"><div><span class="eyebrow">hoje</span><h2>O nosso espaço</h2></div><button class="text-btn" data-page="notes">ver tudo →</button></div>
-        <div class="dashboard-grid">
-          <article class="dash-card dark" data-open="chat">
-            <div class="card-label">01 · CONVERSAS</div><div class="card-icon">♡</div>
-            <h3>“Você viu aquilo?”</h3><p>Última mensagem há 12 min.</p><span class="card-link">continuar conversa →</span>
-          </article>
-          <article class="dash-card music" data-open="music">
-            <div class="card-label">02 · AGORA</div><div class="vinyl">◉</div>
-            <p class="music-caption">tocando para você</p><h3>Holocene</h3><p>Bon Iver</p><div class="progress"><i></i></div>
-          </article>
-          <article class="dash-card books" data-open="books">
-            <div class="card-label">03 · BIBLIOTECA</div><div class="book-count">23</div><p>livros na nossa estante</p><div class="mini-stats"><span><b>12</b> lidos</span><span><b>7</b> queremos</span><span><b>4</b> lendo</span></div>
-          </article>
-          <article class="dash-card note" data-open="notes">
-            <div class="card-label">04 · NOTA FIXADA</div><h3>“Precisamos fazer aquela viagem.”</h3><p>21.08.26 · compartilhada</p><span class="pin">✦</span>
-          </article>
-        </div>
+  <div class="topline">
+    <span id="homeDate"></span>
+    <span class="quiet-dot">● online</span>
+  </div>
 
-        <div class="section-heading"><div><span class="eyebrow">últimas</span><h2>Pequenas coisas</h2></div></div>
-        <div class="timeline">
-          <div><span class="time">HOJE</span><p><b>Uma nova música foi adicionada</b><br>“My Love Mine All Mine” · Mitski</p></div>
-          <div><span class="time">ONTEM</span><p><b>Um livro entrou na lista</b><br>“A amiga genial” · Elena Ferrante</p></div>
-          <div><span class="time">18 AGO</span><p><b>Uma memória foi guardada</b><br>Uma tarde que merecia ficar.</p></div>
-        </div>
-      </section>
+  <div class="hero">
+    <div>
+      <p class="eyebrow">um cantinho só nosso</p>
+
+      <h1>
+        Olá, meninas.<br>
+        <em>Que bom ter vocês aqui.</em>
+      </h1>
+
+      <p class="hero-copy">
+        Conversas, músicas, livros, ideias e pequenas memórias —
+        tudo guardado no mesmo lugar.
+      </p>
+    </div>
+
+    <div class="quote-card">
+      <span>“</span>
+      <p>Algumas coisas ficam melhores quando compartilhadas.</p>
+      <small>— para nós duas</small>
+    </div>
+  </div>
+
+
+  <div class="section-heading">
+    <div>
+      <span class="eyebrow">hoje</span>
+      <h2>O nosso espaço</h2>
+    </div>
+
+    <button class="text-btn" data-page="notes">
+      ver tudo →
+    </button>
+  </div>
+
+
+  <div class="dashboard-grid">
+
+    <!-- CONVERSAS -->
+
+    <article class="dash-card dark" data-open="chat">
+
+      <div class="card-label">
+        01 · CONVERSAS
+      </div>
+
+      <div class="card-icon">♡</div>
+
+      <h3 id="homeLastMessage"></h3>
+
+      <p id="homeMessageTime"></p>
+
+      <span class="card-link">
+        continuar conversa →
+      </span>
+
+    </article>
+
+
+    <!-- MÚSICA -->
+
+    <article class="dash-card music" data-open="music">
+
+      <div class="card-label">
+        02 · AGORA
+      </div>
+
+      <div class="vinyl">◉</div>
+
+      <p class="music-caption">
+        tocando para você
+      </p>
+
+      <h3 id="homeMusicTitle"></h3>
+
+      <p id="homeMusicArtist"></p>
+
+      <div class="progress">
+        <i></i>
+      </div>
+
+    </article>
+
+
+    <!-- LIVROS -->
+
+    <article class="dash-card books" data-open="books">
+
+      <div class="card-label">
+        03 · BIBLIOTECA
+      </div>
+
+      <div
+        class="book-count"
+        id="homeBookCount"
+      >0</div>
+
+      <p>livros na nossa estante</p>
+
+      <div class="mini-stats">
+
+        <span>
+          <b id="homeReadCount">0</b>
+          lidos
+        </span>
+
+        <span>
+          <b id="homeWantCount">0</b>
+          queremos
+        </span>
+
+        <span>
+          <b id="homeReadingCount">0</b>
+          lendo
+        </span>
+
+      </div>
+
+    </article>
+
+
+    <!-- NOTA -->
+
+    <article class="dash-card note" data-open="notes">
+
+      <div class="card-label">
+        04 · NOTA FIXADA
+      </div>
+
+      <h3 id="homeNoteTitle"></h3>
+
+      <p id="homeNoteDate"></p>
+
+      <span class="pin">✦</span>
+
+    </article>
+
+  </div>
+
+
+  <!-- TIMELINE -->
+
+  <div class="section-heading">
+    <div>
+      <span class="eyebrow">últimas</span>
+      <h2>Pequenas coisas</h2>
+    </div>
+  </div>
+
+  <div
+    class="timeline"
+    id="homeTimeline"
+  ></div>
+
+</section>
 
       <section id="chat" class="page">
         <div class="page-title"><div><span class="eyebrow">01 · CONVERSAS</span><h1>Entre nós</h1><p>Um chat privado para tudo e para nada.</p></div><button class="primary" id="newMessage">+ nova mensagem</button></div>

@@ -1,0 +1,13 @@
+const pages=document.querySelectorAll('.page');const nav=document.querySelectorAll('.nav-item[data-page]');const toast=document.getElementById('toast');
+function showPage(id){pages.forEach(p=>p.classList.toggle('active-page',p.id===id));nav.forEach(n=>n.classList.toggle('active',n.dataset.page===id));window.scrollTo({top:0,behavior:'smooth'});}
+nav.forEach(n=>n.addEventListener('click',()=>showPage(n.dataset.page)));
+document.querySelectorAll('[data-open]').forEach(c=>c.addEventListener('click',()=>showPage(c.dataset.open)));
+document.querySelectorAll('.text-btn').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
+document.getElementById('menuBtn').addEventListener('click',()=>document.querySelector('.sidebar').classList.toggle('open'));
+function notify(text){toast.textContent=text;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),2200)}
+const form=document.getElementById('messageForm'), input=document.getElementById('messageInput'), messages=document.getElementById('messages');
+form.addEventListener('submit',e=>{e.preventDefault();const text=input.value.trim();if(!text)return;const d=document.createElement('div');d.className='message me';d.innerHTML='<small>agora</small><p></p>';d.querySelector('p').textContent=text;messages.appendChild(d);input.value='';messages.scrollTop=messages.scrollHeight;notify('Mensagem enviada ♡')});
+document.getElementById('newMessage').addEventListener('click',()=>{input.focus();notify('Escreva uma nova mensagem')});
+document.getElementById('playBtn').addEventListener('click',e=>{e.currentTarget.textContent=e.currentTarget.textContent==='▶'?'Ⅱ':'▶';notify(e.currentTarget.textContent==='Ⅱ'?'Tocando agora ♫':'Pausado')});
+document.getElementById('addNote').addEventListener('click',()=>{const title=prompt('Título da nota');if(!title)return;const body=prompt('Escreva a nota');if(body===null)return;const card=document.createElement('article');card.className='note-card';card.innerHTML='<span>AGORA</span><h3></h3><p></p><small>minha nota</small>';card.querySelector('h3').textContent=title;card.querySelector('p').textContent=body;document.getElementById('notesGrid').prepend(card);notify('Nota guardada')});
+document.getElementById('addBook').addEventListener('click',()=>{const title=prompt('Nome do livro');if(!title)return;const author=prompt('Autora/autor')||'Autor desconhecido';const card=document.createElement('article');card.className='book-card';card.innerHTML='<div class="cover c4">NOVO<br>LIVRO</div><b></b><small></small><span>☆ ☆ ☆ ☆ ☆</span>';card.querySelector('b').textContent=title;card.querySelector('small').textContent=author;document.getElementById('bookGrid').prepend(card);notify('Livro adicionado à biblioteca')});

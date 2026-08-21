@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#111111" />
+  <title>Nosso Lugar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;1,500;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand"><span class="brand-mark">N</span><span>nosso lugar</span></div>
+      <div class="sister-card">
+        <div class="avatar">M</div>
+        <div><strong>Meninas</strong><small>um espaço só nosso</small></div>
+      </div>
+      <nav>
+        <button class="nav-item active" data-page="home"><span>⌂</span>Início</button>
+        <button class="nav-item" data-page="chat"><span>♡</span>Conversas</button>
+        <button class="nav-item" data-page="music"><span>♫</span>Música</button>
+        <button class="nav-item" data-page="books"><span>▤</span>Livros</button>
+        <button class="nav-item" data-page="notes"><span>✎</span>Notas</button>
+        <button class="nav-item" data-page="memories"><span>◌</span>Memórias</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <button class="nav-item"><span>⚙</span>Configurações</button>
+      </div>
+    </aside>
+
+    <main>
+      <header class="mobile-header">
+        <div class="brand"><span class="brand-mark">N</span><span>nosso lugar</span></div>
+        <button id="menuBtn" class="icon-btn">☰</button>
+      </header>
+
+      <section id="home" class="page active-page">
+        <div class="topline"><span>SEXTA-FEIRA · 21 AGOSTO 2026</span><span class="quiet-dot">● online</span></div>
+        <div class="hero">
+          <div>
+            <p class="eyebrow">um cantinho só nosso</p>
+            <h1>Olá, meninas.<br><em>Que bom ter vocês aqui.</em></h1>
+            <p class="hero-copy">Conversas, músicas, livros, ideias e pequenas memórias — tudo guardado no mesmo lugar.</p>
+          </div>
+          <div class="quote-card">
+            <span>“</span>
+            <p>Algumas coisas ficam melhores quando compartilhadas.</p>
+            <small>— para nós duas</small>
+          </div>
+        </div>
+
+        <div class="section-heading"><div><span class="eyebrow">hoje</span><h2>O nosso espaço</h2></div><button class="text-btn" data-page="notes">ver tudo →</button></div>
+        <div class="dashboard-grid">
+          <article class="dash-card dark" data-open="chat">
+            <div class="card-label">01 · CONVERSAS</div><div class="card-icon">♡</div>
+            <h3>“Você viu aquilo?”</h3><p>Última mensagem há 12 min.</p><span class="card-link">continuar conversa →</span>
+          </article>
+          <article class="dash-card music" data-open="music">
+            <div class="card-label">02 · AGORA</div><div class="vinyl">◉</div>
+            <p class="music-caption">tocando para você</p><h3>Holocene</h3><p>Bon Iver</p><div class="progress"><i></i></div>
+          </article>
+          <article class="dash-card books" data-open="books">
+            <div class="card-label">03 · BIBLIOTECA</div><div class="book-count">23</div><p>livros na nossa estante</p><div class="mini-stats"><span><b>12</b> lidos</span><span><b>7</b> queremos</span><span><b>4</b> lendo</span></div>
+          </article>
+          <article class="dash-card note" data-open="notes">
+            <div class="card-label">04 · NOTA FIXADA</div><h3>“Precisamos fazer aquela viagem.”</h3><p>21.08.26 · compartilhada</p><span class="pin">✦</span>
+          </article>
+        </div>
+
+        <div class="section-heading"><div><span class="eyebrow">últimas</span><h2>Pequenas coisas</h2></div></div>
+        <div class="timeline">
+          <div><span class="time">HOJE</span><p><b>Uma nova música foi adicionada</b><br>“My Love Mine All Mine” · Mitski</p></div>
+          <div><span class="time">ONTEM</span><p><b>Um livro entrou na lista</b><br>“A amiga genial” · Elena Ferrante</p></div>
+          <div><span class="time">18 AGO</span><p><b>Uma memória foi guardada</b><br>Uma tarde que merecia ficar.</p></div>
+        </div>
+      </section>
+
+      <section id="chat" class="page">
+        <div class="page-title"><div><span class="eyebrow">01 · CONVERSAS</span><h1>Entre nós</h1><p>Um chat privado para tudo e para nada.</p></div><button class="primary" id="newMessage">+ nova mensagem</button></div>
+        <div class="chat-layout">
+          <div class="chat-list"><div class="chat-preview selected"><div class="avatar">I</div><div><b>Nós duas</b><p>Você viu aquilo? ♡</p></div><time>12 min</time></div></div>
+          <div class="chat-window">
+            <div class="chat-header"><div class="avatar">I</div><div><b>Nós duas</b><small>as duas online</small></div></div>
+            <div class="messages" id="messages">
+              <div class="message them"><small>14:56</small><p>Você viu o livro que eu te mandei?</p></div>
+              <div class="message me"><small>14:58</small><p>VI 😭 já coloquei na lista.</p></div>
+              <div class="message them"><small>15:01</small><p>sabia. a gente precisa parar de adicionar livros.</p></div>
+              <div class="message me"><small>15:02</small><p>não vamos parar.</p></div>
+            </div>
+            <form class="composer" id="messageForm"><input id="messageInput" placeholder="Escreva alguma coisa..." autocomplete="off"><button>→</button></form>
+          </div>
+        </div>
+      </section>
+
+      <section id="music" class="page">
+        <div class="page-title"><div><span class="eyebrow">02 · MÚSICA</span><h1>Ouvindo agora</h1><p>Cada uma pode ouvir a sua música — mas vocês continuam juntas.</p></div></div>
+        <div class="music-stage">
+          <div class="record-art"><div class="record">◉</div></div>
+          <div class="now-playing"><span class="eyebrow">VOCÊ ESTÁ OUVINDO</span><h2>Holocene</h2><p>Bon Iver</p><div class="big-progress"><i></i></div><div class="player-controls"><button>↶</button><button class="play" id="playBtn">▶</button><button>↷</button></div></div>
+        </div>
+        <div class="section-heading"><div><span class="eyebrow">compartilhadas</span><h2>Nossas playlists</h2></div><button class="primary">+ playlist</button></div>
+        <div class="playlist-grid"><div class="playlist"><b>nossas músicas</b><span>48 faixas</span></div><div class="playlist"><b>dias ruins</b><span>16 faixas</span></div><div class="playlist"><b>2026</b><span>23 faixas</span></div></div>
+      </section>
+
+      <section id="books" class="page">
+        <div class="page-title"><div><span class="eyebrow">03 · BIBLIOTECA</span><h1>Os nossos livros</h1><p>Uma estante compartilhada, com espaço para cada história.</p></div><button class="primary" id="addBook">+ adicionar livro</button></div>
+        <div class="book-tabs"><button class="active">todos · 23</button><button>lidos · 12</button><button>lendo · 4</button><button>quero ler · 7</button></div>
+        <div class="book-grid" id="bookGrid">
+          <article class="book-card"><div class="cover c1">A<br>AMIGA<br>GENIAL</div><b>A amiga genial</b><small>Elena Ferrante</small><span>★ ★ ★ ★ ★</span></article>
+          <article class="book-card"><div class="cover c2">THE<br>SECRET<br>HISTORY</div><b>The Secret History</b><small>Donna Tartt</small><span>★ ★ ★ ★ ☆</span></article>
+          <article class="book-card"><div class="cover c3">NORMAL<br>PEOPLE</div><b>Normal People</b><small>Sally Rooney</small><span>★ ★ ★ ★ ☆</span></article>
+          <article class="book-card"><div class="cover c4">JANE<br>EYRE</div><b>Jane Eyre</b><small>Charlotte Brontë</small><span>★ ★ ★ ★ ★</span></article>
+        </div>
+      </section>
+
+      <section id="notes" class="page">
+        <div class="page-title"><div><span class="eyebrow">04 · CADERNO</span><h1>Notas</h1><p>Pensamentos que não queremos deixar escapar.</p></div><button class="primary" id="addNote">+ nova nota</button></div>
+        <div class="notes-grid" id="notesGrid">
+          <article class="note-card large"><span>21.08.26</span><h3>Precisamos fazer aquela viagem para a Itália algum dia.</h3><p>Sem desculpas. Toscana, uma câmera, muitos livros e tempo de sobra.</p><small>compartilhada · por nós duas</small></article>
+          <article class="note-card"><span>18.08.26</span><h3>Livros para ler juntas</h3><p>— A amiga genial<br>— As ondas<br>— Piranesi</p><small>compartilhada</small></article>
+          <article class="note-card"><span>12.08.26</span><h3>Ideias</h3><p>Fazer uma playlist para cada estação.</p><small>minha nota</small></article>
+        </div>
+      </section>
+
+      <section id="memories" class="page">
+        <div class="page-title"><div><span class="eyebrow">05 · MEMÓRIAS</span><h1>O que queremos guardar</h1><p>Pequenos momentos, para não depender só da memória.</p></div><button class="primary">+ guardar memória</button></div>
+        <div class="memory-feature"><div class="memory-image">18<br><small>AGO · 2026</small></div><div><span class="eyebrow">UMA TARDE</span><h2>Uma tarde que merecia ficar.</h2><p>Sem grandes planos. Só nós duas, café, conversa e aquela sensação boa de não precisar estar em nenhum outro lugar.</p><small>♡ guardada por vocês</small></div></div>
+        <div class="memory-row"><div><span>03 AGO</span><b>domingo preguiçoso</b></div><div><span>27 JUL</span><b>o filme que quase odiamos</b></div><div><span>14 JUL</span><b>uma descoberta aleatória</b></div></div>
+      </section>
+    </main>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script src="app.js"></script>
+</body>
+</html>

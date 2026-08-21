@@ -117,8 +117,33 @@
           <div class="record-art"><div class="record">◉</div></div>
           <div class="now-playing"><span class="eyebrow">VOCÊ ESTÁ OUVINDO</span><h2>Holocene</h2><p>Bon Iver</p><div class="big-progress"><i></i></div><div class="player-controls"><button>↶</button><button class="play" id="playBtn">▶</button><button>↷</button></div></div>
         </div>
-        <div class="section-heading"><div><span class="eyebrow">compartilhadas</span><h2>Nossas playlists</h2></div><button class="primary">+ playlist</button></div>
-        <div class="playlist-grid"><div class="playlist"><b>nossas músicas</b><span>48 faixas</span></div><div class="playlist"><b>dias ruins</b><span>16 faixas</span></div><div class="playlist"><b>2026</b><span>23 faixas</span></div></div>
+<div class="section-heading">
+  <div>
+    <span class="eyebrow">compartilhadas</span>
+    <h2>Nossas playlists</h2>
+  </div>
+
+  <button class="primary" id="addPlaylist">
+    + playlist
+  </button>
+</div>
+
+<div class="playlist-grid"></div>
+
+<div class="songs-panel hidden" id="songsPanel">
+  <div class="section-heading">
+    <div>
+      <span class="eyebrow">PLAYLIST</span>
+      <h2 id="selectedPlaylistName">Músicas</h2>
+    </div>
+
+    <button class="primary" id="addSong">
+      + adicionar música
+    </button>
+  </div>
+
+  <div id="songsList"></div>
+</div>        <div class="playlist-grid"><div class="playlist"><b>nossas músicas</b><span>48 faixas</span></div><div class="playlist"><b>dias ruins</b><span>16 faixas</span></div><div class="playlist"><b>2026</b><span>23 faixas</span></div></div>
       </section>
 
       <section id="books" class="page">

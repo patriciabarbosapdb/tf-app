@@ -45,7 +45,7 @@ async function addPlaylist(name) {
 
 
 // =====================================================
-// MÚSICAS
+// MÚSICAS DA PLAYLIST
 // =====================================================
 
 async function getPlaylistSongs(playlistId) {
@@ -65,7 +65,7 @@ async function getPlaylistSongs(playlistId) {
 
 
 // =====================================================
-// UPLOAD MP3
+// UPLOAD DO MP3
 // =====================================================
 
 async function uploadMP3(file) {
@@ -80,25 +80,20 @@ async function uploadMP3(file) {
     file.type !== "audio/mpeg" &&
     !file.name.toLowerCase().endsWith(".mp3")
   ) {
-    throw new Error(
-      "Escolhe um ficheiro MP3."
-    );
+    throw new Error("O ficheiro tem de ser MP3.");
   }
 
-  // Limite de 20 MB
   if (file.size > 20 * 1024 * 1024) {
     throw new Error(
-      "O ficheiro é demasiado grande. O máximo é 20 MB."
+      "O MP3 é demasiado grande. O limite é 20 MB."
     );
   }
 
-  const extension = "mp3";
-
   const fileName =
-    `${user.id}/${crypto.randomUUID()}.${extension}`;
+    `${user.id}/${crypto.randomUUID()}.mp3`;
 
 
-  const { error: uploadError } =
+  const { error } =
     await db.storage
       .from("music")
       .upload(
@@ -112,8 +107,8 @@ async function uploadMP3(file) {
       );
 
 
-  if (uploadError) {
-    throw uploadError;
+  if (error) {
+    throw error;
   }
 
 
@@ -123,12 +118,19 @@ async function uploadMP3(file) {
       .getPublicUrl(fileName);
 
 
+  if (!data || !data.publicUrl) {
+    throw new Error(
+      "Não foi possível obter o URL do MP3."
+    );
+  }
+
+
   return data.publicUrl;
 }
 
 
 // =====================================================
-// ADICIONAR MÚSICA À BD
+// ADICIONAR MÚSICA À PLAYLIST
 // =====================================================
 
 async function addPlaylistSong({
@@ -166,9 +168,7 @@ async function addPlaylistSong({
 async function loadPlaylists() {
 
   const grid =
-    document.getElementById(
-      "playlistGrid"
-    );
+    document.getElementById("playlistGrid");
 
   if (!grid) return;
 
@@ -202,27 +202,20 @@ async function loadPlaylists() {
 
 
       const card =
-        document.createElement(
-          "div"
-        );
+        document.createElement("div");
 
-      card.className =
-        "playlist";
+      card.className = "playlist";
 
 
       const title =
-        document.createElement(
-          "b"
-        );
+        document.createElement("b");
 
       title.textContent =
         playlist.name;
 
 
       const count =
-        document.createElement(
-          "span"
-        );
+        document.createElement("span");
 
       count.textContent =
         `${songs.length} ${
@@ -253,6 +246,7 @@ async function loadPlaylists() {
 
       grid.appendChild(card);
     }
+
 
   } catch (error) {
 
@@ -298,8 +292,7 @@ async function loadPlaylistSongs(
 
     const playlist =
       playlists.find(
-        item =>
-          item.id === playlistId
+        p => p.id === playlistId
       );
 
 
@@ -310,10 +303,8 @@ async function loadPlaylistSongs(
 
 
     if (name && playlist) {
-
       name.textContent =
         playlist.name;
-
     }
 
 
@@ -323,9 +314,7 @@ async function loadPlaylistSongs(
       );
 
 
-    panel.classList.remove(
-      "hidden"
-    );
+    panel.classList.remove("hidden");
 
     list.innerHTML = "";
 
@@ -345,33 +334,25 @@ async function loadPlaylistSongs(
     songs.forEach(song => {
 
       const item =
-        document.createElement(
-          "div"
-        );
+        document.createElement("div");
 
       item.className =
         "song-item";
 
 
       const info =
-        document.createElement(
-          "div"
-        );
+        document.createElement("div");
 
 
       const title =
-        document.createElement(
-          "b"
-        );
+        document.createElement("b");
 
       title.textContent =
         song.title;
 
 
       const artist =
-        document.createElement(
-          "small"
-        );
+        document.createElement("small");
 
       artist.textContent =
         song.artist ||
@@ -383,9 +364,7 @@ async function loadPlaylistSongs(
 
 
       const play =
-        document.createElement(
-          "button"
-        );
+        document.createElement("button");
 
       play.className =
         "primary";
@@ -396,21 +375,17 @@ async function loadPlaylistSongs(
 
       play.addEventListener(
         "click",
-        () => {
-
-          playSong(song);
-
-        }
+        () => playSong(song)
       );
 
 
       item.appendChild(info);
       item.appendChild(play);
 
-
       list.appendChild(item);
 
     });
+
 
   } catch (error) {
 
@@ -424,7 +399,111 @@ async function loadPlaylistSongs(
 
 
 // =====================================================
-// TOCAR MP3 NO SITE
+// PLAYER
+// =====================================================
+
+function createAudioPlayer() {
+
+  if (audioPlayer) return;
+
+
+  audioPlayer =
+    document.getElementById(
+      "audioPlayer"
+    );
+
+
+  if (!audioPlayer) {
+
+    audioPlayer =
+      document.createElement("audio");
+
+    audioPlayer.id =
+      "audioPlayer";
+
+    audioPlayer.preload =
+      "metadata";
+
+    document.body.appendChild(
+      audioPlayer
+    );
+  }
+
+
+  audioPlayer.addEventListener(
+    "play",
+    () => {
+
+      const button =
+        document.getElementById(
+          "playBtn"
+        );
+
+      if (button) {
+        button.textContent = "Ⅱ";
+      }
+
+    }
+  );
+
+
+  audioPlayer.addEventListener(
+    "pause",
+    () => {
+
+      const button =
+        document.getElementById(
+          "playBtn"
+        );
+
+      if (button) {
+        button.textContent = "▶";
+      }
+
+    }
+  );
+
+
+  audioPlayer.addEventListener(
+    "ended",
+    () => {
+
+      const button =
+        document.getElementById(
+          "playBtn"
+        );
+
+      if (button) {
+        button.textContent = "▶";
+      }
+
+      notify("Música terminada ♡");
+
+    }
+  );
+
+
+  audioPlayer.addEventListener(
+    "error",
+    () => {
+
+      console.error(
+        "Erro do elemento audio:",
+        audioPlayer.error
+      );
+
+      notify(
+        "Não foi possível reproduzir este MP3."
+      );
+
+    }
+  );
+
+}
+
+
+// =====================================================
+// TOCAR MÚSICA
 // =====================================================
 
 function playSong(song) {
@@ -432,7 +511,7 @@ function playSong(song) {
   if (!song || !song.url) {
 
     notify(
-      "Esta música não tem ficheiro."
+      "Esta música não tem ficheiro MP3."
     );
 
     return;
@@ -467,91 +546,7 @@ function playSong(song) {
   }
 
 
-  // Criar player apenas uma vez
-  if (!audioPlayer) {
-
-    audioPlayer =
-      new Audio();
-
-    audioPlayer.preload =
-      "metadata";
-
-
-    audioPlayer.addEventListener(
-      "play",
-      () => {
-
-        const button =
-          document.getElementById(
-            "playBtn"
-          );
-
-        if (button) {
-          button.textContent =
-            "Ⅱ";
-        }
-
-      }
-    );
-
-
-    audioPlayer.addEventListener(
-      "pause",
-      () => {
-
-        const button =
-          document.getElementById(
-            "playBtn"
-          );
-
-        if (button) {
-          button.textContent =
-            "▶";
-        }
-
-      }
-    );
-
-
-    audioPlayer.addEventListener(
-      "ended",
-      () => {
-
-        const button =
-          document.getElementById(
-            "playBtn"
-          );
-
-        if (button) {
-          button.textContent =
-            "▶";
-        }
-
-        notify(
-          "Música terminada ♡"
-        );
-
-      }
-    );
-
-
-    audioPlayer.addEventListener(
-      "error",
-      () => {
-
-        notify(
-          "Não foi possível reproduzir o MP3."
-        );
-
-        console.error(
-          "Erro no áudio:",
-          audioPlayer.error
-        );
-
-      }
-    );
-
-  }
+  createAudioPlayer();
 
 
   audioPlayer.src =
@@ -571,20 +566,22 @@ function playSong(song) {
     .catch(error => {
 
       console.error(
-        "Erro ao reproduzir:",
+        "Erro ao reproduzir MP3:",
         error
       );
 
-      notify(
-        "Não foi possível iniciar a música."
+      alert(
+        "Não foi possível reproduzir a música.\n\n" +
+        "Verifica se o ficheiro está no bucket público 'music'."
       );
 
     });
+
 }
 
 
 // =====================================================
-// BOTÃO PLAY / PAUSE
+// PLAY / PAUSE
 // =====================================================
 
 function setupMusicPlayer() {
@@ -597,11 +594,14 @@ function setupMusicPlayer() {
   if (!button) return;
 
 
+  createAudioPlayer();
+
+
   button.addEventListener(
     "click",
     async () => {
 
-      if (!audioPlayer) {
+      if (!currentSong) {
 
         notify(
           "Escolhe primeiro uma música."
@@ -611,30 +611,30 @@ function setupMusicPlayer() {
       }
 
 
-      if (
-        audioPlayer.paused
-      ) {
+      try {
 
-        try {
+        if (audioPlayer.paused) {
 
           await audioPlayer.play();
 
-        } catch (error) {
+        } else {
 
-          console.error(
-            error
-          );
+          audioPlayer.pause();
 
         }
 
-      } else {
+      } catch (error) {
 
-        audioPlayer.pause();
+        console.error(
+          "Erro no player:",
+          error
+        );
 
       }
 
     }
   );
+
 }
 
 
@@ -674,9 +674,7 @@ function setupAddPlaylist() {
           name
         );
 
-
         await loadPlaylists();
-
 
         notify(
           "Playlist criada ♫"
@@ -686,6 +684,7 @@ function setupAddPlaylist() {
       } catch (error) {
 
         console.error(
+          "Erro ao criar playlist:",
           error
         );
 
@@ -694,14 +693,14 @@ function setupAddPlaylist() {
           "ERRO DO SUPABASE:\n\n" +
           (error.message || error) +
           "\n\nCódigo: " +
-          (error.code ||
-            "sem código")
+          (error.code || "sem código")
         );
 
       }
 
     }
   );
+
 }
 
 
@@ -716,12 +715,35 @@ function setupAddSong() {
       "addSong"
     );
 
-  if (!button) return;
+  const fileInput =
+    document.getElementById(
+      "mp3FileInput"
+    );
+
+
+  if (!button) {
+
+    console.error(
+      "Botão addSong não encontrado."
+    );
+
+    return;
+  }
+
+
+  if (!fileInput) {
+
+    console.error(
+      "mp3FileInput não encontrado."
+    );
+
+    return;
+  }
 
 
   button.addEventListener(
     "click",
-    async () => {
+    () => {
 
       if (!currentPlaylistId) {
 
@@ -733,16 +755,44 @@ function setupAddSong() {
       }
 
 
+      fileInput.value = "";
+
+      fileInput.click();
+
+    }
+  );
+
+
+  fileInput.addEventListener(
+    "change",
+    async () => {
+
+      const file =
+        fileInput.files[0];
+
+
+      if (!file) return;
+
+
       const title =
         prompt(
-          "Nome da música:"
+          "Nome da música:",
+          file.name.replace(
+            /\.mp3$/i,
+            ""
+          )
         );
 
 
       if (
         !title ||
         !title.trim()
-      ) return;
+      ) {
+
+        fileInput.value = "";
+
+        return;
+      }
 
 
       const artist =
@@ -751,115 +801,72 @@ function setupAddSong() {
         ) || "";
 
 
-      // Criar input invisível
-      const input =
-        document.createElement(
-          "input"
+      try {
+
+        notify(
+          "A enviar a música..."
         );
 
-      input.type =
-        "file";
 
-      input.accept =
-        ".mp3,audio/mpeg";
-
-      input.style.display =
-        "none";
+        const url =
+          await uploadMP3(
+            file
+          );
 
 
-      document.body.appendChild(
-        input
-      );
+        await addPlaylistSong({
+
+          playlistId:
+            currentPlaylistId,
+
+          title:
+            title.trim(),
+
+          artist:
+            artist.trim(),
+
+          url:
+            url
+
+        });
 
 
-      input.addEventListener(
-        "change",
-        async () => {
-
-          const file =
-            input.files[0];
+        await loadPlaylistSongs(
+          currentPlaylistId
+        );
 
 
-          if (!file) {
-
-            input.remove();
-
-            return;
-          }
+        await loadPlaylists();
 
 
-          try {
-
-            notify(
-              "A enviar a música..."
-            );
+        notify(
+          "Música adicionada ♫"
+        );
 
 
-            const url =
-              await uploadMP3(
-                file
-              );
+      } catch (error) {
+
+        console.error(
+          "ERRO AO ADICIONAR MP3:",
+          error
+        );
 
 
-            await addPlaylistSong({
+        alert(
+          "ERRO AO ADICIONAR MÚSICA:\n\n" +
+          (error.message || error) +
+          "\n\nCódigo: " +
+          (error.code || "sem código")
+        );
 
-              playlistId:
-                currentPlaylistId,
-
-              title:
-                title.trim(),
-
-              artist:
-                artist.trim(),
-
-              url
-
-            });
+      }
 
 
-            await loadPlaylistSongs(
-              currentPlaylistId
-            );
-
-
-            await loadPlaylists();
-
-
-            notify(
-              "Música adicionada ♫"
-            );
-
-
-          } catch (error) {
-
-            console.error(
-              "ERRO AO ADICIONAR MP3:",
-              error
-            );
-
-
-            alert(
-              "ERRO AO ADICIONAR MÚSICA:\n\n" +
-              (error.message || error) +
-              "\n\nCódigo: " +
-              (error.code ||
-                "sem código")
-            );
-
-          } finally {
-
-            input.remove();
-
-          }
-
-        }
-      );
-
-
-      input.click();
+      fileInput.value = "";
 
     }
   );
+
 }
 
 
@@ -877,7 +884,12 @@ document.addEventListener(
         await getCurrentUser();
 
 
-      if (!user) return;
+      if (!user) {
+        console.log(
+          "Nenhum utilizador autenticado."
+        );
+        return;
+      }
 
 
       setupAddPlaylist();

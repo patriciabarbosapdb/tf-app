@@ -42,9 +42,12 @@
         <button class="nav-item" data-page="notes"><span>✎</span>Notas</button>
         <button class="nav-item" data-page="memories"><span>◌</span>Memórias</button>
       </nav>
-      <div class="sidebar-bottom">
-        <button class="nav-item"><span>⚙</span>Configurações</button>
-      </div>
+      <<button
+  class="nav-item"
+  data-page="settings"
+>
+  <span>⚙</span>Configurações
+</button>
     </aside>
 
     <main>
@@ -397,6 +400,118 @@
   </div>
 
   <div id="memoriesGrid"></div>
+</section>
+
+      <section id="settings" class="page">
+
+  <div class="page-title">
+    <div>
+      <span class="eyebrow">06 · CONTA</span>
+      <h1>Configurações</h1>
+      <p>Cuida do teu espaço e da tua conta.</p>
+    </div>
+  </div>
+
+
+  <div class="settings-grid">
+
+    <!-- PERFIL -->
+
+    <div class="settings-card">
+
+      <span class="eyebrow">
+        PERFIL
+      </span>
+
+      <h2>Os teus dados</h2>
+
+      <label>
+        Nome
+
+        <input
+          type="text"
+          id="settingsName"
+          placeholder="O teu nome"
+        >
+      </label>
+
+      <label>
+        Email
+
+        <input
+          type="email"
+          id="settingsEmail"
+          disabled
+        >
+      </label>
+
+      <button
+        class="primary"
+        id="saveProfile"
+      >
+        guardar alterações
+      </button>
+
+    </div>
+
+
+    <!-- PASSWORD -->
+
+    <div class="settings-card">
+
+      <span class="eyebrow">
+        SEGURANÇA
+      </span>
+
+      <h2>Alterar senha</h2>
+
+      <label>
+        Nova senha
+
+        <input
+          type="password"
+          id="newPassword"
+          minlength="6"
+          placeholder="mínimo de 6 caracteres"
+        >
+      </label>
+
+      <button
+        class="primary"
+        id="changePassword"
+      >
+        alterar senha
+      </button>
+
+    </div>
+
+
+    <!-- SESSÃO -->
+
+    <div class="settings-card">
+
+      <span class="eyebrow">
+        SESSÃO
+      </span>
+
+      <h2>A tua conta</h2>
+
+      <p>
+        Quando terminares a sessão, será necessário
+        entrar novamente para aceder ao Nosso Lugar.
+      </p>
+
+      <button
+        class="logout-button"
+        id="logoutButton"
+      >
+        terminar sessão
+      </button>
+
+    </div>
+
+  </div>
+
 </section>
   <div class="toast" id="toast"></div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
